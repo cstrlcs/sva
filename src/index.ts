@@ -1,9 +1,7 @@
 import type { ImageStyle, TextStyle, ViewStyle } from "react-native";
 
-type StylePart =
-  | Readonly<Partial<ViewStyle>>
-  | Readonly<Partial<ImageStyle>>
-  | Readonly<Partial<TextStyle>>;
+type Style = ViewStyle | ImageStyle | TextStyle;
+type StylePart = Partial<Style>;
 
 type StyleInput = StylePart | ReadonlyArray<StyleInput> | null | undefined;
 
@@ -21,12 +19,12 @@ type VariantValues<V extends Variant> = Readonly<{
   [K in keyof V]?: VariantOptionValue<V[K]> | null | undefined;
 }>;
 
-type ThemeableFunction<V extends Variant> = (theme: any) => VariantsSchema<V>;
+type ThemeableFunction<V extends Variant> = (ctx: any) => VariantsSchema<V>;
 
 type ApplyFunction<V extends Variant> = (
   values: VariantValues<V>,
   options: {
-    readonly theme?: unknown;
+    readonly ctx?: unknown;
     readonly style?: StyleInput;
   },
 ) => StylePart;
@@ -69,9 +67,9 @@ function flattenStyle(style: StyleInput): StylePart | undefined {
 
 export function sva<V extends Variant>(function_: ThemeableFunction<V>): ApplyFunction<V> {
   return (values, options): StylePart => {
-    const { theme, style } = options;
+    const { ctx, style } = options;
 
-    const { base, variants } = function_(theme);
+    const { base, variants } = function_(ctx);
     const variantStyles: StylePart[] = [];
 
     for (const variant of Object.keys(variants) as (keyof V)[]) {

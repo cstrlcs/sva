@@ -13,7 +13,7 @@ describe("sva", () => {
         variants: {},
       }));
 
-      const result = styles({}, { theme: undefined });
+      const result = styles({}, { ctx: undefined });
 
       expect(result).toEqual({
         padding: 10,
@@ -34,7 +34,7 @@ describe("sva", () => {
         },
       }));
 
-      const result = styles({ color: "red" }, { theme: undefined });
+      const result = styles({ color: "red" }, { ctx: undefined });
 
       expect(result).toEqual({
         padding: 10,
@@ -51,7 +51,7 @@ describe("sva", () => {
         },
       }));
 
-      const result = styles({ color: "red" }, { theme: undefined });
+      const result = styles({ color: "red" }, { ctx: undefined });
 
       expect(result).toEqual({
         backgroundColor: "red",
@@ -77,7 +77,7 @@ describe("sva", () => {
         },
       }));
 
-      const result = styles({ color: "red", size: "large" }, { theme: undefined });
+      const result = styles({ color: "red", size: "large" }, { ctx: undefined });
 
       expect(result).toEqual({
         padding: 10,
@@ -101,7 +101,7 @@ describe("sva", () => {
         },
       }));
 
-      const result = styles({ variant1: "a", variant2: "b" }, { theme: undefined });
+      const result = styles({ variant1: "a", variant2: "b" }, { ctx: undefined });
 
       expect(result).toEqual({
         padding: 10,
@@ -125,7 +125,7 @@ describe("sva", () => {
         },
       }));
 
-      const result = styles({ disabled: true }, { theme: undefined });
+      const result = styles({ disabled: true }, { ctx: undefined });
 
       expect(result).toEqual({
         padding: 10,
@@ -146,7 +146,7 @@ describe("sva", () => {
         },
       }));
 
-      const result = styles({ disabled: false }, { theme: undefined });
+      const result = styles({ disabled: false }, { ctx: undefined });
 
       expect(result).toEqual({
         padding: 10,
@@ -167,7 +167,7 @@ describe("sva", () => {
         },
       }));
 
-      const result = styles({}, { theme: undefined });
+      const result = styles({}, { ctx: undefined });
 
       expect(result).toEqual({
         padding: 10,
@@ -188,7 +188,7 @@ describe("sva", () => {
         },
       }));
 
-      const result = styles({ disabled: null }, { theme: undefined });
+      const result = styles({ disabled: null }, { ctx: undefined });
 
       expect(result).toEqual({
         padding: 10,
@@ -197,28 +197,28 @@ describe("sva", () => {
     });
   });
 
-  describe("theme support", () => {
-    test("should pass theme to variant function", () => {
-      const styles = sva((theme) => ({
+  describe("ctx support", () => {
+    test("should pass ctx to variant function", () => {
+      const styles = sva((ctx) => ({
         base: {
           padding: 10,
         },
         variants: {
           color: {
-            primary: { backgroundColor: theme?.colors?.primary ?? "blue" },
-            secondary: { backgroundColor: theme?.colors?.secondary ?? "gray" },
+            primary: { backgroundColor: ctx?.colors?.primary ?? "blue" },
+            secondary: { backgroundColor: ctx?.colors?.secondary ?? "gray" },
           },
         },
       }));
 
-      const theme = {
+      const ctx = {
         colors: {
           primary: "#007AFF",
           secondary: "#6C757D",
         },
       };
 
-      const result = styles({ color: "primary" }, { theme });
+      const result = styles({ color: "primary" }, { ctx });
 
       expect(result).toEqual({
         padding: 10,
@@ -226,19 +226,19 @@ describe("sva", () => {
       });
     });
 
-    test("should use default values when theme is undefined", () => {
-      const styles = sva((theme) => ({
+    test("should use default values when ctx is undefined", () => {
+      const styles = sva((ctx) => ({
         base: {
           padding: 10,
         },
         variants: {
           color: {
-            primary: { backgroundColor: theme?.colors?.primary ?? "blue" },
+            primary: { backgroundColor: ctx?.colors?.primary ?? "blue" },
           },
         },
       }));
 
-      const result = styles({ color: "primary" }, { theme: undefined });
+      const result = styles({ color: "primary" }, { ctx: undefined });
 
       expect(result).toEqual({
         padding: 10,
@@ -264,7 +264,7 @@ describe("sva", () => {
       const result = styles(
         { size: "small" },
         {
-          theme: undefined,
+          ctx: undefined,
           style: { backgroundColor: "blue", color: "white" },
         },
       );
@@ -285,7 +285,7 @@ describe("sva", () => {
         variants: {},
       }));
 
-      const result = styles({}, { theme: undefined, style: undefined });
+      const result = styles({}, { ctx: undefined, style: undefined });
 
       expect(result).toEqual({
         padding: 10,
@@ -307,7 +307,7 @@ describe("sva", () => {
       }));
 
       // @ts-expect-error - Testing invalid variant value
-      const result = styles({ color: "nonexistent" }, { theme: undefined });
+      const result = styles({ color: "nonexistent" }, { ctx: undefined });
 
       expect(result).toEqual({
         padding: 10,
@@ -327,7 +327,7 @@ describe("sva", () => {
         },
       }));
 
-      const result = styles({ color: undefined }, { theme: undefined });
+      const result = styles({ color: undefined }, { ctx: undefined });
 
       expect(result).toEqual({
         padding: 10,
@@ -347,7 +347,7 @@ describe("sva", () => {
         },
       }));
 
-      const result = styles({ color: null }, { theme: undefined });
+      const result = styles({ color: null }, { ctx: undefined });
 
       expect(result).toEqual({
         padding: 10,
@@ -362,7 +362,7 @@ describe("sva", () => {
         variants: {},
       }));
 
-      const result = styles({}, { theme: undefined });
+      const result = styles({}, { ctx: undefined });
 
       expect(result).toEqual({
         padding: 10,
@@ -372,7 +372,7 @@ describe("sva", () => {
 
   describe("complex real-world scenarios", () => {
     test("should handle button component styles", () => {
-      const buttonStyles = sva((theme) => ({
+      const buttonStyles = sva((ctx) => ({
         base: {
           paddingHorizontal: 16,
           paddingVertical: 8,
@@ -383,14 +383,14 @@ describe("sva", () => {
         variants: {
           variant: {
             primary: {
-              backgroundColor: theme?.colors?.primary ?? "#007AFF",
+              backgroundColor: ctx?.colors?.primary ?? "#007AFF",
             },
             secondary: {
-              backgroundColor: theme?.colors?.secondary ?? "#6C757D",
+              backgroundColor: ctx?.colors?.secondary ?? "#6C757D",
             },
             outline: {
               borderWidth: 1,
-              borderColor: theme?.colors?.primary ?? "#007AFF",
+              borderColor: ctx?.colors?.primary ?? "#007AFF",
               backgroundColor: "transparent",
             },
           },
@@ -417,17 +417,14 @@ describe("sva", () => {
         },
       }));
 
-      const theme = {
+      const ctx = {
         colors: {
           primary: "#007AFF",
           secondary: "#6C757D",
         },
       };
 
-      const result = buttonStyles(
-        { variant: "primary", size: "large", disabled: false },
-        { theme },
-      );
+      const result = buttonStyles({ variant: "primary", size: "large", disabled: false }, { ctx });
 
       expect(result).toEqual({
         paddingHorizontal: 20,
@@ -467,7 +464,7 @@ describe("sva", () => {
         disabled: true,
       };
 
-      const result = styles(validProps, { theme: undefined });
+      const result = styles(validProps, { ctx: undefined });
 
       expect(result).toEqual({
         backgroundColor: "red",
@@ -492,7 +489,7 @@ describe("sva", () => {
 
       const props: Props = {};
 
-      const result = styles(props, { theme: undefined });
+      const result = styles(props, { ctx: undefined });
 
       expect(result).toEqual({
         padding: 10,
