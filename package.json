@@ -1,7 +1,7 @@
 {
   "name": "@cstrlcs/sva",
-  "version": "1.0.0",
-  "description": "Style Variant API for React Native",
+  "version": "1.1.0",
+  "description": "Style Variant Authority for React Native",
   "keywords": [
     "react-native",
     "style",
@@ -25,7 +25,7 @@
   },
   "scripts": {
     "build:js": "bun build src/index.ts --outdir dist --target bun --external typescript --external react-native --minify",
-    "build:dts": "tsc --noEmit false --emitDeclarationOnly --declaration --declarationDir dist && tsc-alias -p tsconfig.json --outDir dist",
+    "build:dts": "tsc -p tsconfig.build.json",
     "build": "bun run build:js && bun run build:dts",
     "lint": "oxlint .",
     "lint:fix": "oxlint --fix && oxfmt",
@@ -40,7 +40,6 @@
     "oxlint": "^1.61.0",
     "oxlint-tsgolint": "^0.21.1",
     "react-native": "latest",
-    "tsc-alias": "^1.8.16",
     "typescript": "latest"
   },
   "peerDependencies": {

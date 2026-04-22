@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 
-import { sva, type VariantProps } from "./index";
+import { sva, type VariantProps } from "../src/index";
 
 describe("sva", () => {
   describe("basic functionality", () => {
