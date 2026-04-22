@@ -1,6 +1,6 @@
 {
   "name": "@cstrlcs/sva",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Style Variant Authority for React Native",
   "keywords": [
     "react-native",
@@ -15,6 +15,9 @@
     "type": "git",
     "url": "git+https://github.com/cstrlcs/sva.git"
   },
+  "files": [
+    "dist"
+  ],
   "type": "module",
   "types": "./dist/index.d.ts",
   "exports": {
