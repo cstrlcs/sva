@@ -1,9 +1,9 @@
-import type { ImageStyle, TextStyle, ViewStyle } from "react-native";
+import { type ImageStyle, type StyleProp, type TextStyle, type ViewStyle } from "react-native";
 
 type Style = ViewStyle | ImageStyle | TextStyle;
 type StylePart = Partial<Style>;
-
-type StyleInput = StylePart | ReadonlyArray<StyleInput> | null | undefined;
+type StyleInput = StyleProp<StylePart>;
+type StyleArg = StyleInput | StyleInput[];
 
 type Variant = Record<string, Record<string, StylePart>>;
 
@@ -40,23 +40,20 @@ type ParsedVariants<T> = {
 export type VariantProps<F extends ApplyFunction<any>> =
   F extends ApplyFunction<infer Variants> ? ParsedVariants<ExtractVariants<Variants>> : never;
 
-function isStyleArray(style: StyleInput): style is ReadonlyArray<StyleInput> {
-  return Array.isArray(style);
-}
-
-function flattenStyle(style: StyleInput): StylePart | undefined {
-  if (style == null) {
+function flattenStyle(style: StyleArg): StylePart | undefined {
+  if (style === null || typeof style !== "object") {
     return undefined;
   }
 
-  if (!isStyleArray(style)) {
+  if (!Array.isArray(style)) {
     return style;
   }
 
   const result: Partial<ViewStyle & ImageStyle & TextStyle> = {};
 
   for (const item of style) {
-    const computed = flattenStyle(item);
+    const computed = flattenStyle(item as StyleArg);
+
     if (computed) {
       Object.assign(result, computed);
     }
@@ -87,6 +84,6 @@ export function sva<V extends Variant>(function_: ThemeableFunction<V>): ApplyFu
       variantStyles.push(choice);
     }
 
-    return flattenStyle([base, ...variantStyles, style]) ?? {};
+    return flattenStyle([base, ...variantStyles, style] as StyleArg) ?? {};
   };
 }
