@@ -1,15 +1,13 @@
 # SVA
 
-Style Variant API for React Native. Type-safe component style variants with theme support.
+Style Variance Authority for React Native. Type-safe component style variants with context support.
 
-Reverse-engineered from [CVA](https://cva.style) by Joe Bell — all credit for the original concept goes there.
+Heavily inspired by [CVA](https://github.com/joe-bell/cva) — all credit for the original concept and part of the typing system goes there.
 
 ## Installation
 
 ```bash
 npm install @cstrlcs/sva
-# or
-bun add @cstrlcs/sva
 ```
 
 ## Usage
@@ -17,7 +15,7 @@ bun add @cstrlcs/sva
 ```typescript
 import { sva, type VariantProps } from "@cstrlcs/sva";
 
-const styles = sva(() => ({
+const buttonVariants = sva(() => ({
   base: {
     backgroundColor: "red",
   },
@@ -36,39 +34,46 @@ const styles = sva(() => ({
   },
 }));
 
-const result = styles({ size: "sm" }, { theme: undefined });
-
-type X = VariantProps<typeof styles>;
+type Props = VariantProps<typeof buttonVariants>;
 // { size?: "sm" | "base" | "lg" | null | undefined }
+
+export function MyComponent() {
+  const buttonVariantsStyle = buttonVariants({ size: "sm" }, { ctx: undefined });
+}
 ```
 
-### With theme
+### With context
 
 ```typescript
-const styles = sva((theme) => ({
+const buttonVariants = sva(([theme, insets]: [Theme, EdgeInsets]) => ({
   base: {
     borderRadius: 4,
   },
   variants: {
     variant: {
       primary: {
-        backgroundColor: theme?.colors?.primary ?? "#007AFF",
+        backgroundColor: theme.colors.primary,
+        paddingTop: Math.max(insets.top, theme.spacing.base),
       },
       outline: {
         borderWidth: 1,
-        borderColor: theme?.colors?.primary ?? "#007AFF",
       },
     },
   },
 }));
 
-const result = styles({ variant: "primary" }, { theme: myTheme });
+export function MyComponent() {
+  const theme = useTheme();
+  const insets = useSafeAreaInsets();
+
+  const buttonVariantsStyle = buttonVariants({ variant: "primary" }, { ctx: [theme, insets] });
+}
 ```
 
 ### Boolean variants
 
 ```typescript
-const styles = sva(() => ({
+const buttonVariants = sva(() => ({
   variants: {
     disabled: {
       true: { opacity: 0.5 },
@@ -77,22 +82,6 @@ const styles = sva(() => ({
   },
 }));
 
-type Props = VariantProps<typeof styles>;
+type Props = VariantProps<typeof buttonVariants>;
 // { disabled?: boolean | null | undefined }
 ```
-
-## API
-
-### `sva(fn)`
-
-- `fn`: Receives a theme object, returns `{ base?, variants }`.
-- Returns an apply function: `(values, { theme?, style? }) => StylePart`
-  - `style` is merged last, overriding variant styles.
-
-### `VariantProps<T>`
-
-Extracts variant props from a style function. Boolean variants (`"true" | "false"` keys) are typed as `boolean`.
-
-## License
-
-MIT
